@@ -25,9 +25,12 @@ class Menu:
             self.user_service.init()  # инициализируем табличку с юзерами
 
         self.tg_id = self.login()
-        self.user = self.user_service.check(self.tg_id)  # Check => dto object of User
+        self.check = self.user_service.check(self.tg_id)
+        if self.check == 0:
+            new_user = UserDto(self.tg_id, 'tg_username', state="start")
+            self.user_service.add(new_user)  # Метод add внутри UserService принимает объект UserDto
+        self.user = self.user_service.get(self.tg_id)  # Check => dto object of User
         self.user_id = UserDto.to_model(self.user)[-1]
-        print(self.user_id," user id")
 
         state = SessionState.LOGIN.value
         self.user.state = state

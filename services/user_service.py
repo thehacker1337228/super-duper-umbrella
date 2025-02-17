@@ -38,12 +38,8 @@ class UserService:
         cursor.execute("SELECT COUNT(1) FROM Users WHERE tg_id= ?",(tg_id,))
         result = cursor.fetchall()
         connection.close()
-        if result[0][0] == 0:
-            new_user = UserDto(tg_id, 'tg_username', state="start")
-            self.add(new_user)  # Метод add внутри UserService принимает объект UserDto
-            return self.get(tg_id)
-        else:
-            return self.get(tg_id)
+        return result[0][0]
+
 
     def get(self,tg_id):
         connection = sqlite3.connect(self.db_name)
