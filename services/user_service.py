@@ -79,5 +79,5 @@ class UserDto:
         return (self.tg_id, self.username, self.state, self.json_data, self.created_at, self.user_id)
 
     @staticmethod
-    def from_model(row): #принимает то что из базы ряд и возвращает дтошку
+    def from_model(row): #принимает то что из базы ряд и возвращает дтошкуу
         return UserDto(row[0],row[1],row[2],row[3],row[4],row[5])

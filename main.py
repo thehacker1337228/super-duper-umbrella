@@ -106,7 +106,7 @@ class Menu:
         user.state = state
         self.user_service.update(user)  # апдейтим стейт
 
-        index = input("Введи note_id заметки (первый столбец таблицы):")
+        index = input("Введи note id заметки (первый столбец таблицы):")
         json_data = json.dumps({"del_index": index}, ensure_ascii=False)
         user.json_data = json_data
         self.user_service.update(user)  # апдейтим json
