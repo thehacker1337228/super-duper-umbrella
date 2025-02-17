@@ -3,6 +3,7 @@ from services.note_service import NoteService, NoteDto
 from enum import Enum
 import json
 import random
+import time
 
 
 class SessionState(Enum):
@@ -24,8 +25,9 @@ class Menu:
             self.user_service.init()  # инициализируем табличку с юзерами
 
         self.tg_id = self.login()
-        self.user = self.user_service.get(self.tg_id)  # dto object of User
+        self.user = self.user_service.check(self.tg_id)  # Check => dto object of User
         self.user_id = UserDto.to_model(self.user)[-1]
+        print(self.user_id," user id")
 
         state = SessionState.LOGIN.value
         self.user.state = state
@@ -80,11 +82,12 @@ class Menu:
         self.user_service.update(user)  # апдейтим json
 
         note = self.note_service.get_note(index)
-
+        note.print_content()
         content = input("Редактирование заметки: ")
         note.content = content
         json_data = json.dumps({"edit_content": content}, ensure_ascii=False)
         user.json_data = json_data
+        note.updated_at = round(time.time())
         self.user_service.update(user)  # апдейтим json
         self.note_service.update(note)
         print("Заметка обновлена!")

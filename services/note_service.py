@@ -80,7 +80,6 @@ VALUES(?, ?, ?, ?, ?)
                        (note_id,))
         data = cursor.fetchall()
         row = data[0]
-        print(row[2])
         note = NoteDto.from_model(row)
         connection.close()
         return note
@@ -95,10 +94,6 @@ class NoteDto:
         if created_at == None:
             created_at = round(time.time())
         self.created_at = created_at
-        if updated_at == created_at:
-            updated_at = round(time.time())
-        if updated_at != created_at:
-            updated_at = round(time.time())
         self.updated_at = updated_at
 
     def to_model(self):  # для работы с бд для запроса эскуль
@@ -108,5 +103,9 @@ class NoteDto:
     def from_model(row):  # принимает шо высрала база
         return NoteDto(row[0], row[1], row[2], row[3], row[4], row[5])
 
+
     def print(self):
         print(f"{self.note_id} ({self.title}): {self.content}")
+
+    def print_content(self):
+        print(self.content)

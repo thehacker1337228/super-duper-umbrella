@@ -32,6 +32,18 @@ class UserService:
         connection.commit()
         connection.close()
 
+    def check(self,tg_id):
+        connection = sqlite3.connect(self.db_name)
+        cursor = connection.cursor()
+        cursor.execute("SELECT COUNT(1) FROM Users WHERE tg_id= ?",(tg_id,))
+        result = cursor.fetchall()
+        connection.close()
+        if result[0][0] == 0:
+            new_user = UserDto(tg_id, 'tg_username', state="start")
+            self.add(new_user)  # Метод add внутри UserService принимает объект UserDto
+            return self.get(tg_id)
+        else:
+            return self.get(tg_id)
 
     def get(self,tg_id):
         connection = sqlite3.connect(self.db_name)
@@ -39,12 +51,8 @@ class UserService:
         cursor.execute("SELECT tg_id, username, state, json_data, created_at, user_id FROM Users WHERE tg_id = ? LIMIT 1", (tg_id,))
         result = cursor.fetchall()
         connection.close()
-        if result:
-            return UserDto.from_model(result[0])
-        else:
-            new_user = UserDto(tg_id, 'tg_username', state="start")
-            self.add(new_user)  # Метод add внутри UserService принимает объект UserDto
-            return self.get(tg_id)
+        return UserDto.from_model(result[0])
+
 
 
     def update(self,user): # state + json
